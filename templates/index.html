@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Histórias com IA</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #1a73e8; text-align: center; }
+        label { font-weight: bold; display: block; margin-top: 15px; }
+        input, select, button { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background-color: #1a73e8; color: white; font-weight: bold; cursor: pointer; margin-top: 20px; border: none; }
+        button:hover { background-color: #ab15b0ff; }
+        .result { margin-top: 30px; padding: 20px; background-color: #e8f0fe; border-radius: 5px; border-left: 5px solid #1a73e8; }
+        .error { margin-top: 20px; padding: 15px; background-color: #fce8e6; color: #c5221f; border-radius: 5px; border: 1px solid #fadddc; }
+        .badge { display: inline-block; background: #eee; padding: 2px 6px; font-size: 0.8em; border-radius: 4px; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>✨ Gerador de Histórias Malucas</h1>
+
+    {% if erro_chave %}
+    <div class="error">
+        <strong>⚠️ Atenção:</strong> Sua chave de API não foi encontrada. Verifique o arquivo <code>.env</code>.
+    </div>
+    {% endif %}
+
+    <form action="/gerar" method="post">
+        
+        <label for="modelo">🤖 Escolha o Modelo de IA:</label>
+        <select name="modelo_selecionado" id="modelo" required>
+            {% if not modelos %}
+                <option value="" disabled selected>Nenhum modelo encontrado (Verifique sua API Key)</option>
+            {% endif %}
+
+            {% for modelo in modelos %}
+                <option value="{{ modelo }}" {% if modelo == modelo_atual %}selected{% endif %}>
+                    {{ modelo }}
+                </option>
+            {% endfor %}
+        </select>
+        <small style="color: #666;">Selecione modelos como <b>gemini-pro</b> ou <b>gemini-1.5-flash</b> se disponíveis.</small>
+
+        <label>Palavra 1:</label>
+        <input type="text" name="palavra1" value="{{ palavra1 }}" required placeholder="Ex: Melancia">
+
+        <label>Palavra 2:</label>
+        <input type="text" name="palavra2" value="{{ palavra2 }}" required placeholder="Ex: Astronauta">
+
+        <label>Palavra 3:</label>
+        <input type="text" name="palavra3" value="{{ palavra3 }}" required placeholder="Ex: Dançarino">
+
+        <button type="submit">Gerar História 🚀</button>
+    </form>
+
+    {% if erro %}
+    <div class="error">
+        <h3>Ops! Algo deu errado:</h3>
+        <p>{{ erro }}</p>
+    </div>
+    {% endif %}
+
+    {% if historia %}
+    <div class="result">
+        <h2>📖 Sua História:</h2>
+        <p style="white-space: pre-line;">{{ historia }}</p>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

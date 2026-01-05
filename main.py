@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-# 1. Configuração
+
 load_dotenv()
 API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -15,7 +15,7 @@ if API_KEY:
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
-# Garante que a pasta static existe para evitar erros, mesmo que vazia
+
 os.makedirs("static", exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -29,12 +29,12 @@ def listar_modelos_disponiveis():
 
     modelos_uteis = []
     try:
-        # Lista todos os modelos disponíveis na sua conta
+        
         for m in genai.list_models():
-            # Filtra apenas os que geram conteúdo (texto)
+            
             if 'generateContent' in m.supported_generation_methods:
                 modelos_uteis.append(m.name)
-        # Ordena para ficar bonito
+        
         return sorted(modelos_uteis)
     except Exception as e:
         print(f"Erro ao listar modelos: {e}")
@@ -43,13 +43,13 @@ def listar_modelos_disponiveis():
 
 @app.get("/")
 def home(request: Request):
-    # Ao abrir o site, carregamos a lista de modelos
+    
     modelos = listar_modelos_disponiveis()
 
     return templates.TemplateResponse("index.html", {
         "request": request,
         "modelos": modelos,
-        "erro_chave": not API_KEY  # Avisa se esqueceu a chave
+        "erro_chave": not API_KEY  
     })
 
 
@@ -59,9 +59,9 @@ def gerar_historia(
     palavra1: str = Form(...),
     palavra2: str = Form(...),
     palavra3: str = Form(...),
-    modelo_selecionado: str = Form(...)  # Recebe o modelo escolhido no HTML
+    modelo_selecionado: str = Form(...)  
 ):
-    # Recarrega a lista para manter o menu preenchido
+    
     modelos = listar_modelos_disponiveis()
 
     if not API_KEY:
@@ -87,7 +87,7 @@ def gerar_historia(
     erro = ""
 
     try:
-        # Usa EXATAMENTE o modelo que o usuário selecionou na tela
+        
         print(f"Tentando usar o modelo: {modelo_selecionado}")
         model = genai.GenerativeModel(modelo_selecionado)
 
@@ -105,6 +105,7 @@ def gerar_historia(
         "palavra1": palavra1,
         "palavra2": palavra2,
         "palavra3": palavra3,
-        "modelos": modelos,  # Devolve a lista para o menu não sumir
-        "modelo_atual": modelo_selecionado  # Mantém o modelo selecionado
+        "modelos": modelos,  
+        "modelo_atual": modelo_selecionado  
     })
+

@@ -1,4 +1,4 @@
-
+/* Reset básico */
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +6,7 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
+/* Fundo com gradiente animado */
 body {
   min-height: 100vh;
   display: flex;
@@ -17,7 +17,7 @@ body {
   animation: gradientBG 15s ease infinite;
 }
 
-
+/* Animação do gradiente */
 @keyframes gradientBG {
   0% {
     background-position: 0% 50%;
@@ -30,7 +30,7 @@ body {
   }
 }
 
-
+/* Container central */
 body > h1,
 form {
   width: 90%;
@@ -43,7 +43,7 @@ form {
   margin-bottom: 20px;
 }
 
-
+/* Título */
 h1 {
   font-size: 2rem;
   color: #6a0dad;
@@ -51,7 +51,7 @@ h1 {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-
+/* Labels */
 label {
   font-weight: bold;
   color: #333;
@@ -59,7 +59,7 @@ label {
   margin-bottom: 5px;
 }
 
-
+/* Inputs */
 input[type="text"] {
   width: 80%;
   padding: 10px 12px;
@@ -76,7 +76,7 @@ input[type="text"]:focus {
   box-shadow: 0 0 10px rgba(255, 110, 199, 0.5);
 }
 
-
+/* Botão */
 button {
   background: #6a0dad;
   color: white;
@@ -94,7 +94,7 @@ button:hover {
   box-shadow: 0 5px 15px rgba(255, 110, 199, 0.3);
 }
 
-
+/* Responsivo */
 @media (max-width: 500px) {
   input[type="text"] {
     width: 100%;
@@ -103,4 +103,3 @@ button:hover {
     width: 100%;
   }
 }
-

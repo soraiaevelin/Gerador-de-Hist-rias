@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!-- Define que este documento segue o padrão HTML5 -->
+<html lang="pt-BR">
+<head>
+    <!-- Define o conjunto de caracteres como UTF-8 (acentos, ç, etc.) -->
+    <meta charset="UTF-8">
+
+    <!-- Faz o site se adaptar a celulares e tablets (responsivo) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título que aparece na aba do navegador -->
+    <title>Gerador de Histórias com IA</title>
+
+    <!-- Estilos CSS internos da página -->
+    <style>
+        /* Estilo geral da página */
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        /* Caixa principal do conteúdo */
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Título principal */
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+        }
+
+        /* Labels dos campos */
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        /* Inputs, select e botão */
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Estilo do botão */
+        button {
+            background-color: #1a73e8;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            border: none;
+        }
+
+        /* Efeito ao passar o mouse no botão */
+        button:hover {
+            background-color: #ab15b0ff;
+        }
+
+        /* Área onde a história gerada é exibida */
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f0fe;
+            border-radius: 5px;
+            border-left: 5px solid #1a73e8;
+        }
+
+        /* Estilo para mensagens de erro */
+        .error {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fce8e6;
+            color: #c5221f;
+            border-radius: 5px;
+            border: 1px solid #fadddc;
+        }
+
+        /* Pequenos selos/etiquetas (não usados diretamente aqui) */
+        .badge {
+            display: inline-block;
+            background: #eee;
+            padding: 2px 6px;
+            font-size: 0.8em;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Container principal -->
+<div class="container">
+
+    <!-- Título visível da página -->
+    <h1>✨ Gerador de Histórias Malucas</h1>
+
+    <!--
+        Bloco Jinja2:
+        Só aparece se a variável "erro_chave" for verdadeira
+        (quando a API Key não foi configurada)
+    -->
+    {% if erro_chave %}
+    <div class="error">
+        <strong>⚠️ Atenção:</strong> Sua chave de API não foi encontrada.
+        Verifique o arquivo <code>.env</code>.
+    </div>
+    {% endif %}
+
+    <!-- Formulário que envia os dados para a rota /gerar -->
+    <form action="/gerar" method="post">
+
+        <!-- Seleção do modelo de IA -->
+        <label for="modelo">🤖 Escolha o Modelo de IA:</label>
+        <select name="modelo_selecionado" id="modelo" required>
+
+            <!-- Caso não exista nenhum modelo disponível -->
+            {% if not modelos %}
+                <option value="" disabled selected>
+                    Nenhum modelo encontrado (Verifique sua API Key)
+                </option>
+            {% endif %}
+
+            <!-- Loop Jinja2 para listar os modelos -->
+            {% for modelo in modelos %}
+                <option value="{{ modelo }}"
+                    {% if modelo == modelo_atual %}selected{% endif %}>
+                    {{ modelo }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Texto de ajuda abaixo do select -->
+        <small style="color: #666;">
+            Selecione modelos como <b>gemini-pro</b> ou <b>gemini-1.5-flash</b> se disponíveis.
+        </small>
+
+        <!-- Campos de texto para as palavras -->
+        <label>Palavra 1:</label>
+        <input type="text" name="palavra1"
+               value="{{ palavra1 }}"
+               required
+               placeholder="Ex: Melancia">
+
+        <label>Palavra 2:</label>
+        <input type="text" name="palavra2"
+               value="{{ palavra2 }}"
+               required
+               placeholder="Ex: Astronauta">
+
+        <label>Palavra 3:</label>
+        <input type="text" name="palavra3"
+               value="{{ palavra3 }}"
+               required
+               placeholder="Ex: Dançarino">
+
+        <!-- Botão para enviar o formulário -->
+        <button type="submit">Gerar História 🚀</button>
+    </form>
+
+    <!--
+        Exibe mensagem de erro se algo falhar
+        (ex: erro ao chamar a API)
+    -->
+    {% if erro %}
+    <div class="error">
+        <h3>Ops! Algo deu errado:</h3>
+        <p>{{ erro }}</p>
+    </div>
+    {% endif %}
+
+    <!--
+        Exibe a história gerada pela IA
+        white-space: pre-line mantém quebras de linha do texto
+    -->
+    {% if historia %}
+    <div class="result">
+        <h2>📖 Sua História:</h2>
+        <p style="white-space: pre-line;">{{ historia }}</p>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
